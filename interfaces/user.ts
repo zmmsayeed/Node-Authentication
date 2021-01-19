@@ -1,4 +1,4 @@
 export default interface IUser {
-    username: String;
+    email: String;
     password: String;
 }
