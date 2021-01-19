@@ -9,5 +9,9 @@ const extractJWT = (req: Request, res: Response, next: NextFunction) =>  {
 
     try {
         const verified = jwt.verify(token, 'abcdefghijklmnopqrstuvwxyz');
+        req.body.token = verified;
+        // req.token = verified;
+    } catch(err) {
+        return res.status(400).send("Token not verified")
     }
 }
