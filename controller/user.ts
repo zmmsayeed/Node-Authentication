@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
 import mongoose from 'mongoose';
 import User from '../models/user';
+import signJWT from '../functions/signJWT';
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
     console.log("Token validated! user authorized!")
@@ -44,10 +45,24 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const validPass = await bcryptjs.compare(password, user.password);
     if (!validPass) return res.status(400).send("Invalid Password!");
 
+    // If logged in, create and assing a token to the user
+    let token: string = await signJWT(user);
+    if(token) {
+        res.header('auth-token', token).send({
+            message: "Authorized!",
+            user,
+            token
+        })
+    }
+
 };
 
-const getAllUsers = (req: Request, res: Response, next: NextFunction) => {
-
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+    let allUsers = await User.find().select('-password').exec();
+    return res.status(200).send({
+        users: allUsers,
+        count: allUsers.length
+    }) 
 };
 
 export default { validateToken, register, login, getAllUsers }
