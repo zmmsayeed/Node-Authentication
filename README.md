@@ -4,8 +4,10 @@ This repository consists of JSON web token authentication functionality develope
 
 To run the application: 
 1. Rename the ```.env-exmample``` file to ```.env``` and populate it with your mongodb atlas url and token secret.
-2. To install the dependencies: ```npm install```
-3. To run the application: ```npm run dev```
+2. To install the dependencies: 
+```npm install```
+3. To run the application: 
+```npm run dev```
 
 ### Vanila JavaScript Authentication:
 **Branch:** main
