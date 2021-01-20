@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import bcryptjs from 'bcryptjs';
+import mongoose from 'mongoose';
+import User from '../models/user';
 
 const validateToken = (req: Request, res: Response, next: NextFunction) => {
     console.log("Token validated! user authorized!")
@@ -17,9 +19,30 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
     let hash = await bcryptjs.hash(password, salt);
 
     // TODO: Insert the user to the database
+    const user = new User({
+        email: req.body.email,
+        password: hash
+        
+    });
+
+    try {
+        const savedUser = await user.save();
+        res.status(201).send({ user });
+    } catch(err) {
+        res.status(400).send(err);
+    }
 };
 
-const login = (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response, next: NextFunction) => {
+    let { email, password } = req.body;
+    
+    // Check if the user with the given email exists
+    const user = await User.findOne({ email });
+    if(!user) return res.status(400).send("Email is not found!");
+
+    // Check if password is correct
+    const validPass = await bcryptjs.compare(password, user.password);
+    if (!validPass) return res.status(400).send("Invalid Password!");
 
 };
 

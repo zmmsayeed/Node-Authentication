@@ -5,7 +5,8 @@ const signJWT = (user: IUser, callback: (error: Error | null , token: string | n
     console.log(`Attempting to sign token for the use: ${user.email}`);
 
     try {
-        jwt.sign({ email: user.email }, 'abcdefghijklmnopqrstuvwxyz', (err, token)=> {
+        // TODO: make this with async await
+        jwt.sign({ email: user.email }, process.env.TOKEN_SECRET!, (err, token)=> {
             if (err) callback(err, null);
             else callback(null, token);
         })
